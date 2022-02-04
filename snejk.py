@@ -1,3 +1,8 @@
+## Snake Game by Adam Šupej
+## Adam Šupej, I. ročník
+## Zimný semester, 2021/22
+## Programování NPRG030
+
 import sys
 import random as rnd
 import pygame as pg
@@ -194,6 +199,7 @@ class GAME():
             self.food.generate_food_pos()
             self.snake.extend()
 
+    # Checks if food is not in collision with snake or obstacles
     def check_food_collision(self):
         for body_part in self.snake.body[1:]: ## Prevent spawning on our SNAKE
             if body_part == self.food.pos:
@@ -203,6 +209,7 @@ class GAME():
             if obstacle == self.food.pos:
                 self.food.generate_food_pos()
 
+    # Snake Collision
     def collision(self):
         if self.state == 1:
             if not 0 <= self.snake.body[0].x < tile_count or not 0 <= self.snake.body[0].y < tile_count: ## Crashing into walls
