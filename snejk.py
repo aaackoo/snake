@@ -1,5 +1,5 @@
 ## Snake Game
-## Adam Šupej, I. ročník, Bc. studium, Informatika
+## Adam Šupej, I. ročník, Bc. studium, Informatika IPP
 ## Zimný semester, 2021/22
 ## Programování 1 NPRG030
 
