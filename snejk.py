@@ -1,13 +1,14 @@
-## Snake Game by Adam Šupej
-## Adam Šupej, I. ročník
+## Snake Game
+## Adam Šupej, I. ročník, Bc. studium, Informatika
 ## Zimný semester, 2021/22
-## Programování NPRG030
+## Programování 1 NPRG030
 
 import sys
 import random as rnd
 import pygame as pg
 from pygame.math import Vector2 as vec ## Vectors for easier use (personal preference)
 
+## Class for SNAKE
 class SNAKE():
     def __init__(self) -> None:
         self.generate_snake()
@@ -36,18 +37,20 @@ class SNAKE():
         self.body.append(self.body[-1])
         self.sound.play()
 
+## Class for FOOD
 class FOOD():
     def __init__(self) -> None:
         self.generate_food_pos()
         self.photo = pg.transform.scale(pg.image.load('Images/food.png'), (40,40)).convert_alpha()
 
-    def generate_food_pos(self):
+    def generate_food_pos(self): ## Generates RANDOM position for FOOD
         self.pos = vec(rnd.randrange(0, tile_count), rnd.randrange(0, tile_count))
 
-    def draw_food(self):
+    def draw_food(self): ## Draws image on screen
         food = pg.Rect(int(self.pos.x * tile_size), int(self.pos.y * tile_size), tile_size, tile_size)
         win.blit(self.photo, food) 
     
+## Class for GAME
 class GAME():
     def __init__(self) -> None:
         self.snake = SNAKE()
@@ -71,6 +74,7 @@ class GAME():
         self.writting = False
         self.name = ""
 
+    ## USER EVENT
     def check_event(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -152,7 +156,6 @@ class GAME():
     ## TITLE SCREEN ##
     def title_screen(self):
         self.state = 0
-        self.bg()
         self.draw_score()
 
         text = self.font.render('Collect BEERS to get higher score.', True, self.color)
@@ -178,7 +181,6 @@ class GAME():
 
     ## RUN TIME ##
     def run(self):
-        self.bg()
         self.snake.draw_snake()
         self.food.draw_food()
         self.check_food_collision()
@@ -186,15 +188,15 @@ class GAME():
             self.draw_obstacles()
         self.draw_score()
 
-    def update(self):
-        self.snake.turn_status = 1
+    def update(self): ## Update game state, moving snake
+        self.snake.turn_status = 1 ## SNAKE can turn again
         if len(self.snake.body) > 13:
             game.rand_turn()
         self.snake.move()
         self.eat()
         self.collision()
 
-    def eat(self):
+    def eat(self): ## Compare SNAKE head pos and FOOD pos
         if self.food.pos == self.snake.body[0]:
             self.food.generate_food_pos()
             self.snake.extend()
@@ -211,7 +213,7 @@ class GAME():
 
     # Snake Collision
     def collision(self):
-        if self.state == 1:
+        if self.state == 1: ## Crashing into edges of the screen
             if not 0 <= self.snake.body[0].x < tile_count or not 0 <= self.snake.body[0].y < tile_count: ## Crashing into walls
                 self.game_over()
                 self.snake.ded.play()
@@ -243,44 +245,34 @@ class GAME():
                 self.snake.turn_status = 0
                 self.snake.direction = vec(0, 1)
 
-    def bg(self):
-        pass
-        # color = (0,100,0)
-        # for i in range(tile_count):
-        #     if not i % 2:
-        #         for j in range(tile_count):
-        #             if j % 2:
-        #                 chess_rect = pg.Rect(j * tile_size, i * tile_size, tile_size, tile_size)
-        #                 pg.draw.rect(win, color, chess_rect)
-        #     else:
-        #         for j in range(tile_count):
-        #             if not j % 2:
-        #                 chess_rect = pg.Rect(j * tile_size, i * tile_size, tile_size, tile_size)
-        #                 pg.draw.rect(win, color, chess_rect)
-
+    ## READING chosen map.txt and putting positions into self.obstacles
     def read_obstacles(self):
         self.obstacles = []
         with open(f'Maps/{self.map}.txt', 'r') as F:
             for i in F.readlines():
                 self.obstacles.append(vec(int(i.split()[0]),int(i.split()[1])))
 
+    ## DRAWING obstacles from self.obstacles onto screen
     def draw_obstacles(self):
         for vector in self.obstacles:
             obs_rect = pg.Rect((vector.x) * tile_size, (vector.y) * tile_size, tile_size, tile_size)
             # win.blit(self.obs_img, obs_rect)
             pg.draw.rect(win, pg.Color(70, 70, 70), obs_rect)
 
+    ## Drawing score
     def draw_score(self):
         text = f"beers: {len(self.snake.body) - 3}"
         score = self.font.render(text, True, self.color)
         score_pos = int(tile_size * tile_count - 100) 
         win.blit(score, score.get_rect(center = (score_pos, 40)))
 
+    ## Drawing HALL_OF_FAME.txt onto screen
     def generate_table(self):
         with open('hall_of_fame.txt', 'r', encoding = 'utf-8-sig') as leader:
             row = leader.readlines()
         self.top = []
-        ## QUICKSORT?
+
+        ## Sorting algorithm | QUICKSORT?
         for index, i in enumerate(row):
             row[index] = i.split()
         lenght = len(row)
@@ -297,9 +289,9 @@ class GAME():
             self.top.append(cele)
             row.pop(one)
 
+    ## ENDING SCREEN ##
     def game_over(self):
         self.state = 2
-        self.bg()
 
         text = self.font_title.render('GAMEOVER', True, pg.Color('red'))
         text2 = self.font.render(f'You have finished with the final beer count of {len(self.snake.body) - 3}!', True, self.color)
