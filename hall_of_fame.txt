@@ -9,3 +9,7 @@ Stanko 11
 Robino 13
 Eugen 16
 Adam 7
+Alfred 12
+Frantisek 15
+Standa 7
+Dezider 19

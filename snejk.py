@@ -271,22 +271,21 @@ class GAME():
             row = leader.readlines()
         self.top = []
 
-        ## Sorting algorithm | QUICKSORT?
-        for index, i in enumerate(row):
-            row[index] = i.split()
+        ## Sorting algorithm
+        for index, i in enumerate(row): 
+            row[index] = i.split() ## Getting everything into list
         lenght = len(row)
         while (len(self.top) != lenght):
-            print(row[0][1])
-            max = int(row[0][1])
-            for index, prvok in enumerate(row):
-                if max <= int(prvok[1]):
-                    max = int(prvok[1])
-                    cele = prvok
-                    one = index
-            if len(self.top) == 5:
+            if len(self.top) == 5: ## We have enough
                 break
-            self.top.append(cele)
-            row.pop(one)
+            max_value = int(row[0][-1]) ## Setting the maximum value as the first value from original list
+            for index, num in enumerate(row):
+                if max_value <= int(num[-1]): ## Comparing every value with our current maximum value
+                    max_value = int(num[-1])
+                    max_index = index
+                    full = num
+            self.top.append(full) ## Appending biggest value into final list
+            row.pop(max_index) ## Removing value from original list
 
     ## ENDING SCREEN ##
     def game_over(self):
@@ -310,7 +309,7 @@ class GAME():
         ## LEADERBOARD
         if self.written: 
             for i in range(len(self.top)):
-                leaderboard = self.font.render(f'{i + 1}. {self.top[i][0]}: {self.top[i][1]} beers', True, self.color)
+                leaderboard = self.font.render(f'{i + 1}. {self.top[i][0]}: {self.top[i][-1]} beers', True, self.color)
                 win.blit(leaderboard, leaderboard.get_rect(center = (400, 580 + i * 40)))
                 if i == 4:
                     break
