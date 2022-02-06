@@ -63,7 +63,7 @@ class GAME():
         self.map = 1
         self.finger_pos = 60
         self.obstacles = []
-        # self.obs_img = pg.transform.scale(pg.image.load('Images/obstacle.png'), (40,40)).convert_alpha()
+        self.obs_img = pg.transform.scale(pg.image.load('Images/obstacle.png'), (40,40)).convert_alpha()
         ## FONT
         self.font = pg.font.Font('Fonts/Sticky_Notes.TTF', 40)
         self.font_title = pg.font.Font('Fonts/Sticky_Notes.TTF', 100)
@@ -256,8 +256,7 @@ class GAME():
     def draw_obstacles(self):
         for vector in self.obstacles:
             obs_rect = pg.Rect((vector.x) * tile_size, (vector.y) * tile_size, tile_size, tile_size)
-            # win.blit(self.obs_img, obs_rect)
-            pg.draw.rect(win, pg.Color(70, 70, 70), obs_rect)
+            win.blit(self.obs_img, obs_rect)
 
     ## Drawing score
     def draw_score(self):
