@@ -233,7 +233,7 @@ class GAME():
 
     ## Drunk effect
     def rand_turn(self): ## SNAKE GETS "DRUNK" AND TENDS TO CHANGE DIRECTION ON HIS OWN
-        num = rnd.randint(1, int(1000/(len(self.snake.body) - 3) * 5))
+        num = rnd.randint(1, int(1000/(len(self.snake.body) - 3) * 2))
         dir = rnd.randint(0, 3)
         if 1 <= num <= 3:
             if game.snake.direction.x != 1 and dir == 0:
