@@ -16,6 +16,7 @@ class SNAKE():
         self.sound = pg.mixer.Sound('Sounds/drink.wav')
         self.ded = pg.mixer.Sound('Sounds/hit.mp3')
 
+    ## GENERATES new snake
     def generate_snake(self):
         self.body = [vec(10, 10), vec(9, 10), vec(8, 10)]
         self.direction = vec(1, 0)
@@ -28,11 +29,13 @@ class SNAKE():
             snake = pg.Rect(int(body_part.x * tile_size), int(body_part.y * tile_size), tile_size, tile_size)
             win.blit(self.body_img, snake)
 
+    ## Imitates moving animation
     def move(self):
         body_copy = self.body[:-1] ## REMOVING LAST SEGMENT
         body_copy.insert(0, body_copy[0] + self.direction) ## ADDING NEW SEGMENT AT THE BEGINNING
         self.body = body_copy.copy()
 
+    ## Extend out snake when he eats food object
     def extend(self):
         self.body.append(self.body[-1])
         self.sound.play()
@@ -60,8 +63,8 @@ class GAME():
           ## 1 - Main game
           ## 2 - Ending_screen
         ## MAP SETTINGS
-        self.map = 1
-        self.finger_pos = 60
+        self.map = 1 ## 1/2/3/4
+        self.finger_pos = 60 ## Position of our "pointer"
         self.obstacles = []
         self.obs_img = pg.transform.scale(pg.image.load('Images/obstacle.png'), (40,40)).convert_alpha()
         ## FONT
@@ -181,22 +184,22 @@ class GAME():
 
     ## RUN TIME ##
     def run(self):
-        self.snake.draw_snake()
-        self.food.draw_food()
-        self.check_food_collision()
-        if self.map != 1:
-            self.draw_obstacles()
-        self.draw_score()
+        self.snake.draw_snake() ## Drawing snake
+        self.food.draw_food() ## Drawing food
+        self.check_food_collision() ## Checks if food isnt spawned on top of smthng
+        self.draw_obstacles() ## Draws obstacles
+        self.draw_score() ## Draws score
 
     def update(self): ## Update game state, moving snake
         self.snake.turn_status = 1 ## SNAKE can turn again
         if len(self.snake.body) > 13:
             game.rand_turn()
-        self.snake.move()
-        self.eat()
-        self.collision()
+        self.snake.move() ## Moving snake
+        self.eat_food() 
+        self.check_collision() ## Checks SNAKE collision
 
-    def eat(self): ## Compare SNAKE head pos and FOOD pos
+    ## EATING food object
+    def eat_food(self): ## Comparing SNAKE head pos and FOOD pos
         if self.food.pos == self.snake.body[0]:
             self.food.generate_food_pos()
             self.snake.extend()
@@ -212,7 +215,7 @@ class GAME():
                 self.food.generate_food_pos()
 
     # Snake Collision
-    def collision(self):
+    def check_collision(self):
         if self.state == 1: ## Crashing into edges of the screen
             if not 0 <= self.snake.body[0].x < tile_count or not 0 <= self.snake.body[0].y < tile_count: ## Crashing into walls
                 self.game_over()
@@ -228,6 +231,7 @@ class GAME():
                     self.game_over()
                     self.snake.ded.play()
 
+    ## Drunk effect
     def rand_turn(self): ## SNAKE GETS "DRUNK" AND TENDS TO CHANGE DIRECTION ON HIS OWN
         num = rnd.randint(1, int(1000/(len(self.snake.body) - 3) * 5))
         dir = rnd.randint(0, 3)
